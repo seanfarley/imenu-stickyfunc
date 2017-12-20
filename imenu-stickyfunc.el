@@ -68,6 +68,33 @@ Capture its function declaration, and place it in the header
 line. If there is no function, disable the header line."
   "PLACEHOLDER")
 
+;;;; Minor mode
+
+;;;###autoload
+(define-minor-mode imenu-stickyfunc-mode
+  "Minor mode to make the current function sticky in the header line.
+With prefix argument ARG, turn on if positive, otherwise off.
+Return non-nil if the minor mode is enabled."
+  :group 'imenu
+  (if imenu-stickyfunc-mode
+      (progn
+        (when (and (local-variable-p 'header-line-format (current-buffer))
+                   (not (eq header-line-format
+                            imenu-stickyfunc-header-line-format)))
+          ;; Save previous buffer local value of header line format.
+          (set (make-local-variable 'imenu-stickyfunc-old-hlf)
+               header-line-format))
+        ;; Enable the mode
+        (setq header-line-format imenu-stickyfunc-header-line-format))
+    ;; Disable mode
+    (when (eq header-line-format imenu-stickyfunc-header-line-format)
+      ;; Restore previous buffer local value of header line format if
+      ;; the current one is the sticky func one.
+      (kill-local-variable 'header-line-format)
+      (when (local-variable-p 'imenu-stickyfunc-old-hlf (current-buffer))
+        (setq header-line-format imenu-stickyfunc-old-hlf)
+        (kill-local-variable 'imenu-stickyfunc-old-hlf)))))
+
 (provide 'imenu-stickyfunc)
 
 ;;; imenu-stickyfunc.el ends here
