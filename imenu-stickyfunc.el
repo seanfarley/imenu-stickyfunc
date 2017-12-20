@@ -39,6 +39,27 @@
 
 ;;;; Requirements
 
+;;;; Variables
+
+(defvar imenu-stickyfunc-old-hlf nil
+  "Value of the header line when entering imenu-stickyfunc mode.")
+
+(defvar-local imenu-stickyfunc-stickyline nil
+  "Value of header line")
+(put 'imenu-stickyfunc-stickyline 'risky-local-variable t)
+
+(defconst imenu-stickyfunc-header-line-format
+  '(:eval (progn
+            (setq imenu-stickyfunc-stickyline (imenu-stickyfunc--fetch-stickyline))
+            (list
+             (propertize " " 'display '((space :align-to 0)))
+             'imenu-stickyfunc-stickyline)))
+  "The header line format used by stickyfunc mode.")
+
+(defgroup imenu-stickyfunc nil
+  "Options for `imenu-stickyfunc-mode'."
+  :group 'org)
+
 (provide 'imenu-stickyfunc)
 
 ;;; imenu-stickyfunc.el ends here
