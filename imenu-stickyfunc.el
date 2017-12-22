@@ -41,6 +41,8 @@
 
 ;;;; Variables
 
+(defvar imenu-auto-rescan)
+
 (defvar imenu-stickyfunc-old-hlf nil
   "Value of the header line when entering imenu-stickyfunc mode.")
 
@@ -86,6 +88,8 @@ Return non-nil if the minor mode is enabled."
           ;; if imenu is not loaded, then load it here
           (unless (featurep 'imenu)
             (require 'imenu nil t))
+          ;; set default if not already set
+          (setq-default imenu-auto-rescan t)
           ;; Save previous buffer local value of header line format.
           (set (make-local-variable 'imenu-stickyfunc-old-hlf)
                header-line-format))
