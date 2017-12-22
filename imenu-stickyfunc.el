@@ -83,6 +83,9 @@ Return non-nil if the minor mode is enabled."
         (when (and (local-variable-p 'header-line-format (current-buffer))
                    (not (eq header-line-format
                             imenu-stickyfunc-header-line-format)))
+          ;; if imenu is not loaded, then load it here
+          (unless (featurep 'imenu)
+            (require 'imenu nil t))
           ;; Save previous buffer local value of header line format.
           (set (make-local-variable 'imenu-stickyfunc-old-hlf)
                header-line-format))
