@@ -41,8 +41,10 @@
 
 ;;;; Variables
 
+(defvar imenu--index-alist)
 (defvar imenu-auto-rescan)
 (defvar imenu-auto-rescan-maxout)
+(declare-function imenu--make-index-alist "imenu")
 
 (defvar imenu-stickyfunc-old-hlf nil
   "Value of the header line when entering imenu-stickyfunc mode.")
@@ -70,8 +72,39 @@
 Capture its function declaration, and place it in the header
 line. If there is no function, disable the header line."
   (save-excursion
-    (goto-char (window-start (selected-window)))
-    (format "%s" (point))))
+    (goto-char (window-start (selected-window))) ; go to the beginning of the
+                                                 ; viewable window
+
+    (let* ((imenu-sort-function nil)     ; nil is faster and preserves position
+                                         ; order
+           (items (or imenu--index-alist ; since this function is called almost
+                                         ; continuously, only re-index imenu
+                                         ; when `imenu--index-alist' is nil
+                      (imenu--make-index-alist t)))
+           (items (delete (assoc "*Rescan*" items) items))
+           (p (+ 1 (point)))
+           (prev nil)
+           (item nil)
+           (found nil))
+
+      (setq prev (car items))
+      (setq items (cdr items))
+
+      (while (and (not found)
+                  (> p (cdr prev))
+                  items)
+        (setq item (car items))
+        (if (<= p (cdr item))
+            (setq found t)
+          (setq prev item))
+        (setq items (cdr items)))
+
+      (if found
+          (car prev)
+        ;; if we haven't found any item we need to determine if that's because
+        ;; we're before the first item or after the last item
+        (unless items
+          prev)))))
 
 ;;;; Minor mode
 
