@@ -42,6 +42,7 @@
 ;;;; Variables
 
 (defvar imenu-auto-rescan)
+(defvar imenu-auto-rescan-maxout)
 
 (defvar imenu-stickyfunc-old-hlf nil
   "Value of the header line when entering imenu-stickyfunc mode.")
@@ -90,6 +91,10 @@ Return non-nil if the minor mode is enabled."
             (require 'imenu nil t))
           ;; set default if not already set
           (setq-default imenu-auto-rescan t)
+          ;; set maxout for imenu scanning
+          (setq-default imenu-auto-rescan-maxout (if current-prefix-arg
+                                                     (buffer-size)
+                                                   imenu-auto-rescan-maxout))
           ;; Save previous buffer local value of header line format.
           (set (make-local-variable 'imenu-stickyfunc-old-hlf)
                header-line-format))
