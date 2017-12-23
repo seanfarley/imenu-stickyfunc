@@ -1,0 +1,18 @@
+* imenu-stickyfunc
+
+This package is mostly an academic exercise to make a hybrid of
+=which-function-mode= and =semantic-stickyfunc-enhance=. I like the format of
+=semantic-stickymode-enhance= but the speed is horrid. So, this package tried
+to build the same thing but using =imenu= instead.
+
+Due to how =imenu= stores data (it only stores the start of a function not the
+end) this package is, at best, a guess.
+
+* Installation and Usage
+
+To install manually, put this file in your =load-path=, =(require
+'imenu-stickyfunc)= in your init file, and run =imenu-stickyfunc=.
+
+* License
+
+GPLv3 or any later version.
